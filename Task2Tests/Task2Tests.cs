@@ -21,7 +21,7 @@ namespace Task2Tests
         [TestCase(double.NegativeInfinity, ExpectedResult = "1111111111110000000000000000000000000000000000000000000000000000")]
         [TestCase(double.PositiveInfinity, ExpectedResult = "0111111111110000000000000000000000000000000000000000000000000000")]
 
-        public string BitOperations_PositiveTests(double number)
+        public string BitOperation_PositiveTests(double number)
         {
             return number.GetBinaryNumber();
         }

@@ -15,12 +15,63 @@ namespace Task1
 
         #region EuclidMethod
 
+        public static int GCDEuclid(Func<int, int, int> gcd, int first) => Math.Abs(first);
+
+        public static int GCDEuclid(Func<int, int, int> gcd, int first, int second) => gcd(first, second);
+
+        public static int GCDEuclid(Func<int, int, int> gcd, int first, int second, int third) => gcd(gcd(first, second), third);
+
+        public static int GCDEuclid(Func<int, int, int> gcd, out long elapsedTime, int first)
+        {
+            elapsedTime = default(long);
+
+            Stopwatch sw = new Stopwatch();
+            sw.Restart();
+
+            int result = first;
+
+            sw.Stop();
+            elapsedTime = sw.ElapsedMilliseconds;
+
+            return result;    
+        } 
+
+        public static int GCDEuclid(Func<int, int, int> gcd, out long elapsedTime, int first, int second)
+        {
+            elapsedTime = default(long);
+
+            Stopwatch sw = new Stopwatch();
+            sw.Restart();
+
+            int result = gcd(first, second);
+
+            sw.Stop();
+            elapsedTime = sw.ElapsedMilliseconds;
+
+            return result;
+        }
+
+        public static int GCDEuclid(Func<int, int, int> gcd, out long elapsedTime, int first, int second, int third)
+        {
+            elapsedTime = default(long);
+
+            Stopwatch sw = new Stopwatch();
+            sw.Restart();
+
+            int result = gcd(gcd(first, second), third);
+
+            sw.Stop();
+            elapsedTime = sw.ElapsedMilliseconds;
+
+            return result;
+        }
+
         /// <summary>
         /// Method finds gcd of several integers by Euclid method.
         /// </summary>
         /// <param name="numbers">Array of numbers.</param>
         /// <returns>Gcd of several integers.</returns>
-        public static int GcdEuclid(out long elapsedTime, params int[] numbers)
+        public static int GcdEuclid(Func<int,int,int> gcd, out long elapsedTime, params int[] numbers)
         {
             if (numbers.Contains(0))
                 numbers = numbers.Where(p => p != 0).Distinct().OrderByDescending(p => p).ToArray();
@@ -29,29 +80,20 @@ namespace Task1
                 throw new ArgumentException();
 
             elapsedTime = default(long);
-            if (numbers.Length == 1)
-                return numbers[0];
 
             Stopwatch sw = new Stopwatch();
             sw.Restart();
-            int gcd = FindGcdEuclid(numbers);
+
+            for (int i = 0; i < numbers.Length - 1; i++)
+                numbers[i + 1] = gcd(numbers[i], numbers[i + 1]);
+
             sw.Stop();
             elapsedTime = sw.ElapsedMilliseconds;
 
-            return gcd;
+            return Math.Abs(numbers.Last());
         }
 
-        #endregion
-
-
-        #region BinaryEuclidMethod
-
-        /// <summary>
-        /// Method finds gcd of several integers by binary Euclid method.
-        /// </summary>
-        /// <param name="numbers">Array of numbers.</param>
-        /// <returns>Gcd of deveral numbers.</returns>
-        public static int GcdBinaryEuclid(out long elapsedTime, params int[] numbers)
+        public static int GcdEuclid(Func<int, int, int> gcd, params int[] numbers)
         {
             if (numbers.Contains(0))
                 numbers = numbers.Where(p => p != 0).Distinct().OrderByDescending(p => p).ToArray();
@@ -59,36 +101,16 @@ namespace Task1
             if (numbers.Length == 0)
                 throw new ArgumentException();
 
-            elapsedTime = default(long);
-            if (numbers.Length == 1)
-                return numbers[0];
-          
-            Stopwatch sw= new Stopwatch();
-            sw.Restart();
-            int gcd = FindGcdBinaryEuclid(numbers);
-            sw.Stop();
-            elapsedTime = sw.ElapsedMilliseconds;
+            for (int i = 0; i < numbers.Length - 1; i++)
+                numbers[i + 1] = gcd(numbers[i], numbers[i + 1]);
 
-            return gcd;
+            return Math.Abs(numbers.Last());
         }
 
         #endregion
 
 
-        #region private EuclidMethods
-
-        /// <summary>
-        /// Method finds gcd among several numbers by Euclid Method.
-        /// </summary>
-        /// <param name="numbers">Array of numbers</param>
-        /// <returns>Gcd of several numbers.</returns>
-        private static int FindGcdEuclid(int[] numbers)
-        {
-            for (int i = 0; i < numbers.Length - 1; i++)
-                numbers[i + 1] = EuclidMethod(numbers[i], numbers[i + 1]);
-        
-            return Math.Abs(numbers.Last());
-        }
+        #region EuclidMethod
 
         /// <summary>
         /// Method calculates gcd of two integers by Euclid method.
@@ -96,7 +118,7 @@ namespace Task1
         /// <param name="number1">First integer.</param>
         /// <param name="number2">Second integer.</param>
         /// <returns>Gcd of two integers.</returns>
-        private static int EuclidMethod(int number1, int number2)
+        public static int EuclidMethod(int number1, int number2)
         {
             int t;
             while (number2 != 0)
@@ -111,20 +133,7 @@ namespace Task1
         #endregion
 
 
-        #region private BinaryEuclidMethods
-
-        /// <summary>
-        /// Method finds gcd among several numbers by binary Euclid method.
-        /// </summary>
-        /// <param name="numbers">Array of integers.</param>
-        /// <returns>Gcd of several integers.</returns>
-        private static int FindGcdBinaryEuclid(int[] numbers)
-        {
-            for (int i = 0; i < numbers.Length - 1; i++)
-                numbers[i + 1] = BinaryEuclidMethod(numbers[i], numbers[i + 1]);
-
-            return Math.Abs(numbers.Last());
-        }
+        #region BinaryEuclidMethod
 
         /// <summary>
         /// Method finds gcd of two numbers by binary Euclid method.
@@ -132,7 +141,7 @@ namespace Task1
         /// <param name="number1">First number.</param>
         /// <param name="number2">Second number.</param>
         /// <returns>Gcd of two integers.</returns>
-        private static int BinaryEuclidMethod(int number1, int number2)
+        public static int BinaryEuclidMethod(int number1, int number2)
         {
             if (number1 == 0) return number2;
             if (number2 == 0) return number1;

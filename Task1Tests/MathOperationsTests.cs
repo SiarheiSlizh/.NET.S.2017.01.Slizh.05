@@ -22,7 +22,7 @@ namespace Task1Tests
         public void GcdEuclid_ArgumentException(params int[] numbers)
         {
             long ElapsedTime = default(long);
-            Assert.Throws<ArgumentException>(() => MathOperations.GcdEuclid(MathOperations.EuclidMethod, out ElapsedTime, numbers));
+            Assert.Throws<ArgumentException>(() => MathOperations.GcdEuclid(out ElapsedTime, numbers));
         }
 
 
@@ -35,7 +35,7 @@ namespace Task1Tests
         public int GcdEuclid_PositiveTest(params int[] numbers)
         {
             long elapsedTime = default(long);
-            int result = MathOperations.GcdEuclid(MathOperations.EuclidMethod, out elapsedTime, numbers);
+            int result = MathOperations.GcdEuclid(out elapsedTime, numbers);
             Debug.WriteLine("Elapsed time: " + elapsedTime);
             return result;
         }
@@ -51,7 +51,7 @@ namespace Task1Tests
         public void GcdBinaryEuclid_ArgumentException(params int[] numbers)
         {
             long ElapsedTime = default(long);
-            Assert.Throws<ArgumentException>(() => MathOperations.GcdEuclid(MathOperations.BinaryEuclidMethod, out ElapsedTime, numbers));
+            Assert.Throws<ArgumentException>(() => MathOperations.GcdBinaryEuclid(out ElapsedTime, numbers));
         }
 
 
@@ -64,7 +64,7 @@ namespace Task1Tests
         public int GcdBinaryEuclid_PositiveTest(params int[] numbers)
         {
             long elapsedTime = default(long);
-            int result = MathOperations.GcdEuclid(MathOperations.BinaryEuclidMethod, out elapsedTime, numbers);
+            int result = MathOperations.GcdBinaryEuclid(out elapsedTime, numbers);
             Debug.WriteLine("Elapsed time: " + elapsedTime);
             return result;
         }

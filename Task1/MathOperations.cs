@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 namespace Task1
 {
     /// <summary>
+    /// Delegate that accepts method with out parameter.
+    /// </summary>
+    /// <param name="elapsedTime">time measurement</param>
+    /// <returns></returns>
+    delegate int Func(out long elapsedTime);
+
+    /// <summary>
     /// This class uses math operations.
     /// </summary>
     public static class MathOperations
@@ -19,17 +26,14 @@ namespace Task1
         /// Calculates gcd by classic method
         /// </summary>
         /// <returns>Argument Exception</returns>
-        public static int GcdEuclid()
-        {
-            throw new ArgumentException();
-        }
+        public static int GcdEuclid() => ((Func<int>)(() => { throw new ArgumentException(); }))();
 
         /// <summary>
         /// Calculates gcd of number by classic method
         /// </summary>
         /// <param name="first">number</param>
         /// <returns>gcd of number</returns>
-        public static int GcdEuclid(int first) => Math.Abs(first);
+        public static int GcdEuclid(int first) => DelegateMethod(EuclidMethod, first, default(int));
 
         /// <summary>
         /// Calculates gcd of two numbers by classic method
@@ -53,35 +57,20 @@ namespace Task1
         /// </summary>
         /// <param name="numbers">array of numbers</param>
         /// <returns>gcd of four and more numbers</returns>
-        public static int GcdEuclid(params int[] numbers)
-        {
-            if (numbers.Contains(0))
-                numbers = numbers.Where(p => p != 0).Distinct().OrderByDescending(p => p).ToArray();
-
-            if (numbers.Length == 0)
-                throw new ArgumentException();
-
-            for (int i = 0; i < numbers.Length - 1; i++)
-                numbers[i + 1] = DelegateMethod(EuclidMethod, numbers[i], numbers[i + 1]);
-
-            return Math.Abs(numbers.Last());
-        }
+        public static int GcdEuclid(params int[] numbers) => DelegateMethod(EuclidMethod, numbers);
 
         /// <summary>
         /// Calculates gcd by binary method
         /// </summary>
         /// <returns>Argument Exception</returns>
-        public static int GcdBinaryEuclid()
-        {
-            throw new ArgumentException();
-        }
+        public static int GcdBinaryEuclid() => ((Func<int>)(() => { throw new ArgumentException(); }))();
 
         /// <summary>
         /// Calculates gcd of number by binary method
         /// </summary>
         /// <param name="first">number</param>
         /// <returns>gcd of number</returns>
-        public static int GcdBinaryEuclid(int first) => Math.Abs(first);
+        public static int GcdBinaryEuclid(int first) => DelegateMethod(BinaryEuclidMethod, first, default(int));
 
         /// <summary>
         /// Calculates gcd of two numbers by binary method
@@ -105,19 +94,7 @@ namespace Task1
         /// </summary>
         /// <param name="numbers">array of numbers</param>
         /// <returns>gcd of four and more numbers</returns>
-        public static int GcdBinaryEuclid(params int[] numbers)
-        {
-            if (numbers.Contains(0))
-                numbers = numbers.Where(p => p != 0).Distinct().OrderByDescending(p => p).ToArray();
-
-            if (numbers.Length == 0)
-                throw new ArgumentException();
-
-            for (int i = 0; i < numbers.Length - 1; i++)
-                numbers[i + 1] = DelegateMethod(BinaryEuclidMethod, numbers[i], numbers[i + 1]);
-
-            return Math.Abs(numbers.Last());
-        }
+        public static int GcdBinaryEuclid(params int[] numbers) => DelegateMethod(BinaryEuclidMethod, numbers);
 
         #endregion
 
@@ -129,10 +106,7 @@ namespace Task1
         /// </summary>
         /// <param name="elapsedTime">time measurement</param>
         /// <returns>Argument Exception</returns>
-        public static int GcdEuclid(out long elapsedTime)
-        {
-            throw new ArgumentException();
-        }
+        public static int GcdEuclid(out long elapsedTime) => ((Func)((out long time) => {throw new ArgumentException(); }))(out elapsedTime);
 
         /// <summary>
         /// Calculates gcd of number by classic method with time measurement
@@ -167,37 +141,14 @@ namespace Task1
         /// <param name="elapsedTime">time measurement</param>
         /// <param name="numbers">gcd of four and more numbers</param>
         /// <returns></returns>
-        public static int GcdEuclid(out long elapsedTime, params int[] numbers)
-        {
-            if (numbers.Contains(0))
-                numbers = numbers.Where(p => p != 0).Distinct().OrderByDescending(p => p).ToArray();
-
-            if (numbers.Length == 0)
-                throw new ArgumentException();
-
-            elapsedTime = default(long);
-
-            Stopwatch sw = new Stopwatch();
-            sw.Restart();
-
-            for (int i = 0; i < numbers.Length - 1; i++)
-                numbers[i + 1] = DelegateMethod(EuclidMethod, numbers[i], numbers[i + 1]);
-
-            sw.Stop();
-            elapsedTime = sw.ElapsedMilliseconds;
-
-            return Math.Abs(numbers.Last());
-        }
+        public static int GcdEuclid(out long elapsedTime, params int[] numbers) => DelegateMethodWithTime(EuclidMethod, out elapsedTime, numbers);
 
         /// <summary>
         /// Calculates gcd by binary method with time measurement
         /// </summary>
         /// <param name="elapsedTime">time measurement</param>
         /// <returns>gcd</returns>
-        public static int GcdBinaryEuclid(out long elapsedTime)
-        {
-            throw new ArgumentException();
-        }
+        public static int GcdBinaryEuclid(out long elapsedTime) => ((Func)((out long time) => { throw new ArgumentException(); }))(out elapsedTime);
 
         /// <summary>
         /// Calculates gcd of number by binary method with time measurement
@@ -205,7 +156,7 @@ namespace Task1
         /// <param name="elapsedTime">time measurement</param>
         /// <param name="first">first number</param>
         /// <returns>gcd of number</returns>
-        public static int GcdBinaryEuclid(out long elapsedTime, int first) => DelegateMethodWithTime(BinaryEuclidMethod, out elapsedTime, first, 0);
+        public static int GcdBinaryEuclid(out long elapsedTime, int first) => DelegateMethodWithTime(BinaryEuclidMethod, out elapsedTime, first, default(int));
 
         /// <summary>
         /// Calculates gcd of two numbers by binary method with time measurement
@@ -232,27 +183,7 @@ namespace Task1
         /// <param name="elapsedTime">time measurement</param>
         /// <param name="numbers">array of numbers</param>
         /// <returns>gcd of four and more numbers</returns>
-        public static int GcdBinaryEuclid(out long elapsedTime, params int[] numbers)
-        {
-            if (numbers.Contains(0))
-                numbers = numbers.Where(p => p != 0).Distinct().OrderByDescending(p => p).ToArray();
-
-            if (numbers.Length == 0)
-                throw new ArgumentException();
-
-            elapsedTime = default(long);
-
-            Stopwatch sw = new Stopwatch();
-            sw.Restart();
-
-            for (int i = 0; i < numbers.Length - 1; i++)
-                numbers[i + 1] = DelegateMethod(BinaryEuclidMethod, numbers[i], numbers[i + 1]);
-
-            sw.Stop();
-            elapsedTime = sw.ElapsedMilliseconds;
-
-            return Math.Abs(numbers.Last());
-        }
+        public static int GcdBinaryEuclid(out long elapsedTime, params int[] numbers) => DelegateMethodWithTime(BinaryEuclidMethod, out elapsedTime, numbers);
 
         #endregion
 
@@ -269,6 +200,26 @@ namespace Task1
         private static int DelegateMethod(Func<int, int, int> gcd, int first, int second) => gcd(first, second);
 
         /// <summary>
+        /// Calculates gcd by one of methods
+        /// </summary>
+        /// <param name="gcd">method of gcd calculating</param>
+        /// <param name="numbers">array of numbers</param>
+        /// <returns>gcd</returns>
+        private static int DelegateMethod(Func<int, int, int> gcd, params int[] numbers)
+        {
+            if (numbers.Contains(0))
+                numbers = numbers.Where(p => p != 0).Distinct().OrderByDescending(p => p).ToArray();
+
+            if (numbers.Length == 0)
+                throw new ArgumentException();
+
+            for (int i = 0; i < numbers.Length - 1; i++)
+                numbers[i + 1] = gcd(numbers[i], numbers[i + 1]);
+
+            return Math.Abs(numbers.Last());
+        }
+
+        /// <summary>
         /// Calculates gcd by one of methods with time measurement
         /// </summary>
         /// <param name="gcd">method of gcd calculating</param>
@@ -283,12 +234,41 @@ namespace Task1
             Stopwatch sw = new Stopwatch();
             sw.Restart();
 
-            int result = DelegateMethod(gcd, first, second);
+            int result = gcd(first, second);
 
             sw.Stop();
             elapsedTime = sw.ElapsedMilliseconds;
 
             return result;
+        }
+
+        /// <summary>
+        /// Calculates gcd by one of methods with time measurement
+        /// </summary>
+        /// <param name="gcd">method of gcd calculating</param>
+        /// <param name="elapsedTime">time measurement</param>
+        /// <param name="numbers">array of numbers</param>
+        /// <returns>gcd</returns>
+        private static int DelegateMethodWithTime(Func<int, int, int> gcd, out long elapsedTime, params int[] numbers)
+        {
+            if (numbers.Contains(0))
+                numbers = numbers.Where(p => p != 0).Distinct().OrderByDescending(p => p).ToArray();
+
+            if (numbers.Length == 0)
+                throw new ArgumentException();
+
+            elapsedTime = default(long);
+
+            Stopwatch sw = new Stopwatch();
+            sw.Restart();
+
+            for (int i = 0; i < numbers.Length - 1; i++)
+                numbers[i + 1] = gcd(numbers[i], numbers[i + 1]);
+
+            sw.Stop();
+            elapsedTime = sw.ElapsedMilliseconds;
+
+            return Math.Abs(numbers.Last());
         }
 
         #endregion
